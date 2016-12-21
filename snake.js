@@ -146,16 +146,16 @@ function draw() {
 }
 
 function keyPressed() {
-    if (keyCode === RIGHT_ARROW) {
+    if (keyCode === RIGHT_ARROW || key === 'D') {
         snake.xSpeed = 1;
         snake.ySpeed = 0;
-    } else if (keyCode === LEFT_ARROW) {
+    } else if (keyCode === LEFT_ARROW || key === 'A') {
         snake.xSpeed = -1;
         snake.ySpeed = 0;
-    } else if (keyCode === UP_ARROW) {
+    } else if (keyCode === UP_ARROW || key === 'W') {
         snake.xSpeed = 0;
         snake.ySpeed = -1;
-    } else if (keyCode === DOWN_ARROW) {
+    } else if (keyCode === DOWN_ARROW || key === 'S') {
         snake.xSpeed = 0;
         snake.ySpeed = 1;
     } else if (key === ' ' || key === 'P') {
