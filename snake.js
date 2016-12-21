@@ -4,6 +4,8 @@ var HEIGHT = 20;
 var FRAMERATE = 7;
 var MAX_LENGTH = 30;
 
+var myVoice = new p5.Speech();
+
 var snake = {
     x: 3,
     y: 3,
@@ -38,6 +40,9 @@ function isInTail(x, y) {
 }
 
 function updateApple() {
+    if (snake.tail.length > 0) {
+        say(snake.tail.length);
+    }
     var x = -1;
     var y = -1;
     while (true) {
@@ -63,8 +68,11 @@ function isHeadInTail() {
 function lost() {
     var str = 'You lost. You ate '.concat(snake.tail.length).concat(' apple');
     if (snake.tail.length > 1) {
-        str = str.concat('s');
+        str = str.concat('s.');
+    } else {
+        str = str.concat('.');
     }
+    say(str);
     alert(str);
     initSnake();
 
@@ -98,6 +106,10 @@ function updateSnake() {
     }
 }
 
+function say(speech) {
+    myVoice.speak(speech);
+}
+
 function removeTail() {
         snake.tail.shift();
 }
@@ -109,7 +121,9 @@ function updateTail() {
     }
     snake.tail.push(coord);
     if (snake.tail.length > MAX_LENGTH) {
-        alert("You won!");
+        var str = "You won!";
+        say(str);
+        alert(str);
         initSnake();
     }
 }
