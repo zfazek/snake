@@ -1,7 +1,7 @@
 var SCL = 30;
-var WIDTH = 15;
-var HEIGHT = 15;
-var FRAMERATE = 6;
+var WIDTH = 13;
+var HEIGHT = 13;
+var FRAMERATE = 5;
 var MAX_LENGTH = 30;
 
 var myVoice = new p5.Speech();
