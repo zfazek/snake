@@ -3,6 +3,8 @@ var WIDTH = 13;
 var HEIGHT = 13;
 var FRAMERATE = 5;
 var MAX_LENGTH = 30;
+var gameState; // GAME|PAUSED|END
+var result;
 
 var myVoice = new p5.Speech();
 
@@ -25,6 +27,8 @@ function initSnake() {
     snake.xSpeed = 1;
     snake.ySpeed = 0;
     snake.tail = [];
+    updateApple();
+    loop();
 }
 
 function isInTail(x, y) {
@@ -43,6 +47,7 @@ function updateApple() {
     if (snake.tail.length > 0) {
         say(snake.tail.length);
     }
+    result.html(snake.tail.length + ' / ' + MAX_LENGTH);
     var x = -1;
     var y = -1;
     while (true) {
@@ -72,9 +77,10 @@ function lost() {
     } else {
         str = str.concat('.');
     }
+    noLoop();
+    gameState = 'END';
     say(str);
-    alert(str);
-    initSnake();
+    result.html(str);
 
 }
 
@@ -122,9 +128,10 @@ function updateTail() {
     snake.tail.push(coord);
     if (snake.tail.length > MAX_LENGTH) {
         var str = "You won!";
+        noLoop();
+        gameState = 'END';
         say(str);
-        alert(str);
-        initSnake();
+        result.html(str);
     }
 }
 
@@ -133,9 +140,12 @@ function update() {
 }
 
 function setup() {
-    createCanvas(WIDTH * SCL, HEIGHT * SCL);
+    result = select('#result');
+    var myCanvas = createCanvas(WIDTH * SCL, HEIGHT * SCL);
+    myCanvas.parent('myCanvas');
     frameRate(FRAMERATE);
     updateApple();
+    gameState = 'GAME';
 }
 
 function drawSnake() {
@@ -160,19 +170,39 @@ function draw() {
 }
 
 function keyPressed() {
-    if (keyCode === RIGHT_ARROW || key === 'D') {
-        snake.xSpeed = 1;
-        snake.ySpeed = 0;
-    } else if (keyCode === LEFT_ARROW || key === 'A') {
-        snake.xSpeed = -1;
-        snake.ySpeed = 0;
-    } else if (keyCode === UP_ARROW || key === 'W') {
-        snake.xSpeed = 0;
-        snake.ySpeed = -1;
-    } else if (keyCode === DOWN_ARROW || key === 'S') {
-        snake.xSpeed = 0;
-        snake.ySpeed = 1;
-    } else if (key === ' ' || key === 'P') {
-        alert('pause');
+    if (gameState === 'GAME') {
+        if (keyCode === RIGHT_ARROW || key === 'D') {
+            snake.xSpeed = 1;
+            snake.ySpeed = 0;
+        } else if (keyCode === LEFT_ARROW || key === 'A') {
+            snake.xSpeed = -1;
+            snake.ySpeed = 0;
+        } else if (keyCode === UP_ARROW || key === 'W') {
+            snake.xSpeed = 0;
+            snake.ySpeed = -1;
+        } else if (keyCode === DOWN_ARROW || key === 'S') {
+            snake.xSpeed = 0;
+            snake.ySpeed = 1;
+        }
+    }
+    if (key === 'P') {
+        if (gameState === 'GAME') {
+            noLoop();
+            gameState = 'PAUSED';
+        } else if (gameState === 'PAUSED') {
+            loop();
+            gameState = 'GAME';
+        }
+    }
+    if (gameState === 'END' && key === ' ') {
+        gameState = 'GAME';
+        initSnake();
+    }
+}
+
+function mousePressed() {
+    if (gameState === 'END') {
+        gameState = 'GAME';
+        initSnake();
     }
 }
